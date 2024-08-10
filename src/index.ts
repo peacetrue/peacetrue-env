@@ -1,4 +1,4 @@
-let ENV_PUBLIC_PREFIX = "";
+let ENV_PUBLIC_PREFIX = '';
 
 export function setEnvPublicPrefix(prefix: string) {
   ENV_PUBLIC_PREFIX = prefix;
@@ -9,13 +9,13 @@ export function getEnvPublicPrefix() {
 }
 
 export function isDevelopment() {
-  return process.env.NODE_ENV === 'development'
+  return process.env.NODE_ENV === 'development';
 }
 
 export function isTest() {
-  return process.env.NODE_ENV === 'test'
+  return process.env.NODE_ENV === 'test';
 }
 
 export function isProduction() {
-  return process.env.NODE_ENV === 'production'
+  return process.env.NODE_ENV === 'production';
 }
