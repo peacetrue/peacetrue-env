@@ -8,6 +8,11 @@ export function getEnvPublicPrefix() {
   return ENV_PUBLIC_PREFIX;
 }
 
+export function getPublicEnv(name: string) {
+  return process.env[ENV_PUBLIC_PREFIX + name];
+}
+
+
 export function isDevelopment() {
   return process.env.NODE_ENV === 'development';
 }
