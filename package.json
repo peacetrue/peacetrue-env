@@ -1,13 +1,13 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "module": "dist/peacetrue-env.esm.js",
   "files": [
     "dist",
     "src",
-    "*.setup.d.ts",
-    "*.setup.js"
+    "*.setup.*"
   ],
   "engines": {
     "node": ">=10"
@@ -35,7 +35,6 @@
   },
   "name": "peacetrue-env",
   "author": "peacetrue",
-  "module": "dist/peacetrue-env.esm.js",
   "size-limit": [
     {
       "path": "dist/peacetrue-env.cjs.production.min.js",

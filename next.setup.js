@@ -1,3 +1,3 @@
-const {setEnvPublicPrefix} = require("./dist");
+const {setup} = require("./dist");
 // https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables
-setEnvPublicPrefix("NEXT_PUBLIC_");
+setup("NEXT_PUBLIC_");
