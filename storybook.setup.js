@@ -1,2 +1,2 @@
-const {setup} = require("./dist");
-setup("STORYBOOK_");
+const {setStoryBookBaseURL} = require("./dist");
+setStoryBookBaseURL();
