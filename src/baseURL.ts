@@ -7,7 +7,7 @@ declare namespace NodeJS {
 }
 
 export const PROP_BASE_URL = 'BASE_URL';
-export const defaultBaseURL = isProduction() ? '' : 'http://localhost:8081';
+export const defaultBaseURL = isProduction() ? '' : 'http://localhost:8080';
 let _baseURL = defaultBaseURL;
 
 export function setBaseURL(baseURL?: string) {

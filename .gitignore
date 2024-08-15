@@ -5,4 +5,6 @@ dist
 yarn.lock
 .idea
 frontend.mk
+frontend-lib.mk
 coverage
+stats.html

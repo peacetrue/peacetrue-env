@@ -1,4 +1,5 @@
-import { getEnvPublicPrefix, setEnvPublicPrefix } from '../src';
+/**@deprecated */
+import {getEnvPublicPrefix, setEnvPublicPrefix} from '../src';
 
 xdescribe('peacetrue-env', () => {
   xit('default', () => {

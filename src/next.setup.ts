@@ -1,3 +1,3 @@
-import { setNextBaseURL } from './next';
+import {setNextBaseURL} from './next';
 
 setNextBaseURL();
