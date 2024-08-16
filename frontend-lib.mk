@@ -4,7 +4,7 @@
 # make -f "$workingDir/learn-make/react-lib.mk" create/
 create/%:
 	mkdir -p $*
-	ln -f $$workingDir/learn-make/react-lib.mk $*/react-lib.mk
+	ln -f $$workingDir/learn-make/react-lib.mk $*/frontend-lib.mk
 
 .gitignore:
 	printf "$$gitignore" > "$@"
@@ -45,20 +45,21 @@ git-init:
 npm-init:
 	rm -rf package.json
 	npm init -y
-npm-init/package.json:
-	sed -i 's/xiayx/peacetrue/' package.json
+package.json/author:
+	sed -i "s/$$(whoami)/peacetrue/" package.json
+package.json/module:
 	sed -i '/"main"/d' package.json
 	sed -i '/version/a\ '"$$package_module"'' package.json
 define package_module
-  "files": ["src","dist"],"source": "src/index.js","main": "dist/index.js","types": "dist/index.d.ts","module": "dist/index.mjs",
+  "files": ["src","dist"],"source": "src/index.ts","main": "dist/index.cjs","types": "dist/index.d.ts","module": "dist/index.mjs",
 endef
 export package_module
 
 # ts-node for jest.config.ts <- jest.config.js
 npm-install-ts:
-#	pnpm i typescript ts-node --save-dev
+	pnpm i typescript ts-node --save-dev
 	pnpm i @types/node --save-dev
-#	npm i tslib --save-dev
+	pnpm i tslib --save-dev
 npx-tsc-init:
 	npx tsc -init
 tsconfig.json:
@@ -92,7 +93,10 @@ npm-install-react:
 	pnpm i @types/react @types/react-dom --save-dev
 
 npm-install-jest:
-	npm install @testing-library/react jest @types/jest jest-environment-jsdom --save-dev
+	pnpm install jest @types/jest jest-environment-jsdom --save-dev
+	pnpm install jest-environment-jsdom --save-dev
+npm-install-jest-react:
+	pnpm install @testing-library/react --save-dev
 jest/package.json:
 	sed -i '/"test":/d' package.json
 	sed -i '/"scripts": {/a\\t"test": "jest",' package.json
@@ -282,9 +286,10 @@ npm-install-rollup:
 	pnpm install -D @rollup/plugin-typescript # 这个插件让 Rollup 能够直接处理 TypeScript 文件，在打包过程中将它们编译为 JavaScript
 	pnpm install -D rollup-plugin-visualizer
 #	pnpm install -D @rollup/plugin-commonjs
-#	pnpm install -D rollup-plugin-peer-deps-external @types/rollup-plugin-peer-deps-external # 这个插件会自动将 package.json 中的 peer dependencies 标记为外部依赖，防止它们被打包到最终输出中
 #	pnpm install -D @types/rollup-plugin-dts rollup-plugin-dts  # 这个插件在 Rollup 构建过程中生成 TypeScript 声明文件（.d.ts）
 #	pnpm install -D @rollup/plugin-terser # 这个插件使用 Terser（一个流行的 JavaScript 压缩工具）来压缩最终的打包文件
+npm-install-rollup-plugin-peer-deps-external:
+	pnpm install -D rollup-plugin-peer-deps-external @types/rollup-plugin-peer-deps-external # 这个插件会自动将 package.json 中的 peer dependencies 标记为外部依赖，防止它们被打包到最终输出中
 rollup/package.json:
 	sed -i '/"main":/d' package.json
 	sed -i '/"scripts": {/i\  "main": "dist/cjs/index.js",' package.json
@@ -297,22 +302,28 @@ define rollup_config
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import {visualizer} from "rollup-plugin-visualizer";
+import {glob} from "glob";
 
-/** @type {[import("rollup").RollupOptions]} */
+/** @type {[import("rollup").RollupOptions]}*/
 const rollupOptions = [{
-    input: ['src/index.ts',],
+    input: ['src/index.ts', ...glob.sync('src/**/*.setup.ts')],
     output: [
         {
             dir: 'dist',
             format: 'cjs',
             preserveModules: true,
             preserveModulesRoot: 'src',
-            sourcemap: true,
+            // sourcemap: true, // 没有压缩，无需 sourcemap
+            entryFileNames: '[name].cjs'
         },
         {
-            file: 'dist/index.mjs',
+            // file: 'dist/index.mjs',
+            dir: 'dist',
             format: 'esm',
-            sourcemap: true,
+            preserveModules: true,
+            preserveModulesRoot: 'src',
+            // sourcemap: true,
+            entryFileNames: '[name].mjs'
         }
     ],
     plugins: [
@@ -352,3 +363,9 @@ npm-uninstall-parcel:
 
 npm-view:
 	npm view $(notdir $(shell pwd))
+
+run-samples/%:
+	mkdir -p $*
+	cd $* && ln -f ../../frontend-lib.mk frontend-lib.mk
+samples/npm: run-samples/samples/npm;
+samples/pnpm: run-samples/samples/pnpm;
