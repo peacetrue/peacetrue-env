@@ -5,7 +5,10 @@ import {glob} from "glob";
 
 /** @type {[import("rollup").RollupOptions]}*/
 const rollupOptions = [{
-    input: ['src/index.ts', ...glob.sync('src/**/*.setup.ts')],
+    input: [
+        'src/index.ts',
+        ...glob.sync('src/**/*.setup.ts'),
+    ],
     output: [
         {
             dir: 'dist',

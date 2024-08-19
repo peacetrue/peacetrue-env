@@ -3,6 +3,11 @@
 dotenv 库本身并不会在编译时替换环境变量，它是在运行时读取和加载 .env 文件的。
 如果你想在编译时（即 TypeScript 编译过程中）替换环境变量，可以使用像 babel-plugin-transform-inline-environment-variables 或 webpack 的 DefinePlugin 这样的工具。
 然而，使用 Rollup 和 TypeScript，你可以通过 rollup-plugin-replace 或 vite 来实现类似的功能。
+环境变量按字面值替换：
+// console.info(process.env.NEXT_PUBLIC_BASE_URL)
+// console.info(process.env['NEXT_PUBLIC_BASE_URL'])
+// console.info(process.env['NEXT_PUBLIC' + 'BASE_URL']);
+
 
 > This TSDX setup is meant for developing libraries (not apps!) that can be published to NPM. If you’re looking to build a Node app, you could use `ts-node-dev`, plain `ts-node`, or simple `tsc`.
 

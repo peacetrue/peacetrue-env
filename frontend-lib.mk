@@ -6,6 +6,10 @@ create/%:
 	mkdir -p $*
 	ln -f $$workingDir/learn-make/react-lib.mk $*/frontend-lib.mk
 
+all: .gitignore;
+
+git-init: .gitignore
+	git init
 .gitignore:
 	printf "$$gitignore" > "$@"
 define gitignore
@@ -38,9 +42,7 @@ dist
 *storybook.log
 endef
 export gitignore
-git-init:
-	git init
-	sed -i '' 's/'"$old_text"'/'"$new_text"'/g' filename.txt
+
 
 npm-init:
 	rm -rf package.json
@@ -57,8 +59,7 @@ export package_module
 
 # ts-node for jest.config.ts <- jest.config.js
 npm-install-ts:
-	pnpm i typescript ts-node --save-dev
-	pnpm i @types/node --save-dev
+	pnpm i typescript ts-node @types/node --save-dev
 	pnpm i tslib --save-dev
 npx-tsc-init:
 	npx tsc -init
@@ -66,9 +67,18 @@ tsconfig.json:
 	printf "$$tsconfig" > $@
 define tsconfig
 {
+  "include": ["src"],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx"
+  ],
   "compilerOptions": {
-    "target": "es5",
+    "outDir": "dist",
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "declaration": true,
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -82,8 +92,7 @@ define tsconfig
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
-  },
-  "include": ["src"]
+  }
 }
 endef
 export tsconfig
@@ -138,7 +147,7 @@ export babel_config
 # npx 是 npm 5.2.0 中引入的一个工具，专门用于执行 Node.js 包中的二进制文件。
 npx-sb-init:
 	mkdir -p src # 自动生成的示例位于 src 下（自动探测 src 目录）
-	npx sb init --type react --builder webpack5 --yes
+	pnpx sb init --type react --builder webpack5 --yes
 
 src/components/smartrating:
 	mkdir -p $@
@@ -291,11 +300,10 @@ npm-install-rollup:
 npm-install-rollup-plugin-peer-deps-external:
 	pnpm install -D rollup-plugin-peer-deps-external @types/rollup-plugin-peer-deps-external # 这个插件会自动将 package.json 中的 peer dependencies 标记为外部依赖，防止它们被打包到最终输出中
 rollup/package.json:
-	sed -i '/"main":/d' package.json
-	sed -i '/"scripts": {/i\  "main": "dist/cjs/index.js",' package.json
-	sed -i '/"scripts": {/i\  "module": "dist/esm/index.js",' package.json
-	sed -i '/"scripts": {/i\  "types": "dist/index.d.ts",' package.json
-	sed -i '/"scripts": {/a\    "build": "rollup -c --bundleConfigAsCjs",' package.json
+	sed -i '/"scripts": {/a\    "build": "rm -rf dist & rollup -c --bundleConfigAsCjs",' package.json
+#	sed -i '/"scripts": {/i\  "main": "dist/cjs/index.js",' package.json
+#	sed -i '/"scripts": {/i\  "module": "dist/esm/index.js",' package.json
+#	sed -i '/"scripts": {/i\  "types": "dist/index.d.ts",' package.json
 rollup.config.js:
 	printf "$$rollup_config" > $@
 define rollup_config
